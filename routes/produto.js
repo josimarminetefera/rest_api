@@ -10,10 +10,25 @@ rota.get("/", (req, res, next) => {
     });
 });
 
-rota.post("", (req, res, next) => {
+rota.post("/", (req, res, next) => {
     res.status(201).send({
         mensagem: "Pagina POST de produto."
     })
+});
+
+rota.get("/:id_produto", (req, res, next) => {
+    const id = req.params.id_produto
+    if (id == 123) {
+        res.status(200).send({
+            mensagem: "Usando GET de um produto específico 123.",
+            id: id,
+        });
+    } else {
+        res.status(200).send({
+            mensagem: "Usando GET de um produto específico outro id.",
+            id: id,
+        });
+    }
 });
 
 //EXPORTAR A ROTA PRONTA
