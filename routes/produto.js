@@ -31,5 +31,17 @@ rota.get("/:id_produto", (req, res, next) => {
     }
 });
 
+rota.patch("/", (req, res, next) => {
+    res.status(201).send({
+        mensagem: "Pagina PATCH de produto."
+    })
+});
+
+rota.delete("/", (req, res, next) => {
+    res.status(201).send({
+        mensagem: "Pagina DELETE de produto."
+    })
+});
+
 //EXPORTAR A ROTA PRONTA
 module.exports = rota;
