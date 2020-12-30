@@ -12,12 +12,10 @@ rota.get("/", (req, res, next) => {
 
 //ROTA DE POST CADASTRAR
 rota.post("/", (req, res, next) => {
-
     const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
     }
-
     res.status(201).send({
         mensagem: "Pagina POST de produto.",
         produto: produto
