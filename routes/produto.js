@@ -3,6 +3,8 @@ const express = require("express");
 //ABRINDO A ROTA
 const rota = express.Router();
 
+const mysql = require("../mysql").pool;
+
 //ROTA DE GET PARA LISTAR
 rota.get("/", (req, res, next) => {
     res.status(200).send({
@@ -12,14 +14,37 @@ rota.get("/", (req, res, next) => {
 
 //ROTA DE POST CADASTRAR
 rota.post("/", (req, res, next) => {
-    const produto = {
+    /*const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
-    }
-    res.status(201).send({
-        mensagem: "Pagina POST de produto.",
-        produto: produto
-    })
+    }*/
+    //UM OUTRA FORMA DE FAZER SEM VARIAVEL 
+    const { nome, preco } = req.body
+
+    mysql.getConnection((erro, conn) => {
+        conn.query(
+            "INSERT INTO produtos (nome, preco) VALUES (?,?)",
+            [nome, preco],
+            //CALBACK DO query
+            (error, resultado, field) => {
+                //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIVBERAR ESTA CONEXÃO
+                //POIS O POOL DE CONEXÃO TEM UM LIMITE DE CONEXOES ABERTAS
+                conn.release();
+
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+
+                return res.status(201).send({
+                    mensagem: "Produto inserido com sucesso.",
+                    id_produto: resultado.insertId
+                });
+            }
+        );
+    });
 });
 
 //ROTA DE GET PARA VISUALIZAR
