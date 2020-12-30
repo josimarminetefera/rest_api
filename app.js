@@ -20,6 +20,27 @@ app.use(body_parser.urlencoded({ extended: false }));
 //ACEITA APENAS FORMATO JSON DE ENTRADA NO BODY
 app.use(body_parser.json());
 
+//INSERIR INFORMAÇÕES DE SEGURANÇA PARA USAR A APLICAÇÃO 
+app.use((req, res, next) => {
+    //PROPRIEDADE DE ONDE É A ORIGEM - PARA ACEITAR UM SERVIDOR ESPECIFICO "HTTP://SERVERVIDOR.COM.BR"
+    res.header("Acces-Control-Allow-Origin", "*");
+    //QUAIS AS PROPRIEDADES DE CABEÇALHO SÃO ACEITAS 
+    res.header(
+        "Acces-Control-Allow-Header",
+        "Content-Type, X-Requested-With, Origin, Accept, Authorization,"
+    );
+
+    //QUANDO O CLIENT VAI CHAMAR A API ELE PASSA ALGUNS OPTIONS
+    //ESTE OPTIONS SERVEM PARA IDENTIFICAR QUAIS OS TIPOS DE OPÇÕES QUE SÃO ACEITAS PELO NOSSO SERVIDOR VINDO DE FORA
+    if (req.method == "OPTIONS") {
+        res.header("Acces-Control-Allow-Methods", "PUT, POST, PATH, DELETE, GET");
+        return res.status(200).send({});
+    }
+
+    //PULAR PARA A PROXIMA FUNÇÃO 
+    next();
+});
+
 app.use("/produto", rota_produtos);
 
 //SE NENHUMA DAS ROTAS ACIMA FUNCIONAR AI ELE CAI AQUI NESTES DE ERRO
