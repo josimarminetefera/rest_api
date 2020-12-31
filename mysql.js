@@ -8,5 +8,5 @@ var pool = mysql.createPool({
     "host": process.env.MYSQL_HOST,
     "port": process.env.MYSQL_PORT
 });
-
+console.log("CONECTANDO BANCO DE DADOS");
 exports.pool = pool;
