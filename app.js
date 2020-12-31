@@ -9,10 +9,11 @@ const morgan = require("morgan");
 //ELE DEFINE O CORPO DAS REQUISIÇÕES DE ENTRADA
 const body_parser = require("body-parser")
 
-//CONSTRUINDO ROTA DE PRODUTOS
-const rota_produtos = require("./routes/produto");
+console.log("CONSTRUINDO ROTAS");
+const rota_produtos = require("./rotas/produto");
+const rota_pedidos = require("./rotas/pedidos");
 
-//PARA MONITORAR TODA EXECUÇÃO E DAR UM LOG
+//PARA MONITORAR TODA EXECUÇÃO E REQUIZIÇÃO E DAR UM LOG
 app.use(morgan("dev"));
 
 //FALANDO QUE A ENTRADA DE DADOS VAI ACEITAR APENAS DADOS SIMPLES
@@ -22,6 +23,7 @@ app.use(body_parser.json());
 
 //INSERIR INFORMAÇÕES DE SEGURANÇA PARA USAR A APLICAÇÃO 
 app.use((req, res, next) => {
+    console.log("FUNÇÃO DE CONFIGURAÇÃO DO SERVER");
     //PROPRIEDADE DE ONDE É A ORIGEM - PARA ACEITAR UM SERVIDOR ESPECIFICO "HTTP://SERVERVIDOR.COM.BR"
     res.header("Acces-Control-Allow-Origin", "*");
     //QUAIS AS PROPRIEDADES DE CABEÇALHO SÃO ACEITAS 
@@ -42,20 +44,24 @@ app.use((req, res, next) => {
 });
 
 app.use("/produto", rota_produtos);
+//app.use("/pedidos", rota_pedidos);
 
 //SE NENHUMA DAS ROTAS ACIMA FUNCIONAR AI ELE CAI AQUI NESTES DE ERRO
 //SE ENEHUMA DAS RODAS ACIMA FOR ENCONTRADA ELE COLOCA ESTA TELA AQUI 
 app.use((req, res, next) => {
-    const erro = new Error("link não encontrado")
+    console.log("FUNÇÃO QUANDO A ROTA ESTÁ ERRADA");
+    const erro = new Error("Link não encontrado")
     erro.status = 404;
     next(erro);
 });
 
-app.use((erro_antes, req, res, next) => {
-    res.status(erro_antes.status || 500);
+//TRATAMENTO QUE VAI RETORNAR QUALQUER ERRO QUE SEMPRE VAI RETORNAR CASO AS ROTAS ACIMA NÃO RETORNE NADA
+app.use((erro, req, res, next) => {
+    console.log("FUNÇÃO PARA RETORNAR O ERRO");
+    res.status(erro.status || 500);
     return res.send({
         erro: {
-            mensagem: erro_antes.message
+            mensagem: erro.message
         }
     });
 });

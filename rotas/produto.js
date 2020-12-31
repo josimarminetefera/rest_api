@@ -7,6 +7,22 @@ const mysql = require("../mysql").pool;
 
 //ROTA DE GET PARA LISTAR
 rota.get("/", (req, res, next) => {
+    console.log("ROTA DE GET PARA LISTAR");
+    mysql.getConnection((erro, conexao) => {
+        //VERIICAR SE TEM ERRO NA CONEXAO 
+        if (erro) {
+            return res.status(500).send({ erro: erro })
+        }
+
+        //BUSCAR OS DADOS
+        conexao.query(
+            "SELECT * FROM produtos;",
+            (erro, resultados, fields) => {
+
+            }
+        );
+    });
+
     res.status(200).send({
         mensagem: "Página GET de  produto."
     });
@@ -14,28 +30,31 @@ rota.get("/", (req, res, next) => {
 
 //ROTA DE POST CADASTRAR
 rota.post("/", (req, res, next) => {
-    /*const produto = {
+    console.log("ROTA DE POST CADASTRAR");
+    const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
-    }*/
+    }
     //UM OUTRA FORMA DE FAZER SEM VARIAVEL 
     const { nome, preco } = req.body
 
-    mysql.getConnection((erro, conn) => {
-        conn.query(
+    mysql.getConnection((erro, conexao) => {
+        //VERIFICAR SE DEU ERRO NA CONEXÃO 
+        if (erro) {
+            return res.status(500).send({ erro: erro })
+        }
+
+        conexao.query(
             "INSERT INTO produtos (nome, preco) VALUES (?,?)",
             [nome, preco],
             //CALBACK DO query
-            (error, resultado, field) => {
+            (erro, resultado, field) => {
                 //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIVBERAR ESTA CONEXÃO
                 //POIS O POOL DE CONEXÃO TEM UM LIMITE DE CONEXOES ABERTAS
-                conn.release();
+                conexao.release();
 
-                if (error) {
-                    return res.status(500).send({
-                        error: error,
-                        response: null
-                    });
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
                 }
 
                 return res.status(201).send({
