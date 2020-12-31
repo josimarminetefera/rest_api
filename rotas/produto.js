@@ -97,7 +97,7 @@ rota.get("/:id_produto", (req, res, next) => {
 
 //ROTA DE PATCH PARA ALTERAR PRODUTO
 rota.patch("/", (req, res, next) => {
-    console.log("ROTA DE PATCH CADASTRAR");
+    console.log("ROTA DE PATCH ALTERAR PRODUTO");
     //UM OUTRA FORMA DE FAZER SEM VARIAVEL 
     const { nome, preco, id } = req.body
 
@@ -124,7 +124,7 @@ rota.patch("/", (req, res, next) => {
                     return res.status(500).send({ erro: erro, response: null });
                 }
 
-                return res.status(201).send({
+                return res.status(202).send({
                     mensagem: "Produto alterado com sucesso.",
                     response: resultado,
                 });
@@ -135,9 +135,37 @@ rota.patch("/", (req, res, next) => {
 
 //PARA REMOÇÃO DE DADOS 
 rota.delete("/", (req, res, next) => {
-    res.status(201).send({
-        mensagem: "Pagina DELETE de produto."
-    })
+    console.log("ROTA DE DELETE PARA REMOVER");
+    const { id } = req.body
+
+    mysql.getConnection((erro, conexao) => {
+        //VERIFICAR SE DEU ERRO NA CONEXÃO 
+        if (erro) {
+            return res.status(500).send({ erro: erro, response: null });
+        }
+
+        conexao.query(
+            `
+                DELETE FROM produtos WHERE id = ?;
+            `,
+            [id],
+            //CALBACK DO query
+            (erro, resultado, field) => {
+                //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIVBERAR ESTA CONEXÃO
+                //POIS O POOL DE CONEXÃO TEM UM LIMITE DE CONEXOES ABERTAS
+                conexao.release();
+
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
+                }
+
+                return res.status(202).send({
+                    mensagem: "Produto removido com sucesso.",
+                    response: resultado,
+                });
+            }
+        );
+    });
 });
 
 //EXPORTAR A ROTA PRONTA
