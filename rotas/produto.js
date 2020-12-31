@@ -69,18 +69,27 @@ rota.post("/", (req, res, next) => {
 
 //ROTA DE GET PARA VISUALIZAR
 rota.get("/:id_produto", (req, res, next) => {
+    console.log("ROTA DE GET PARA VISUALIZAR");
     const id = req.params.id_produto
-    if (id == 123) {
-        res.status(200).send({
-            mensagem: "Usando GET de um produto específico 123.",
-            id: id,
-        });
-    } else {
-        res.status(200).send({
-            mensagem: "Usando GET de um produto específico outro id.",
-            id: id,
-        });
-    }
+    mysql.getConnection((erro, conexao) => {
+        //VERIICAR SE TEM ERRO NA CONEXAO 
+        if (erro) {
+            return res.status(500).send({ erro: erro, response: null });
+        }
+
+        //BUSCAR OS DADOS
+        conexao.query(
+            "SELECT * FROM produtos WHERE id = ?;",
+            [id],
+            //CALLBACK
+            (erro, resultado, fields) => {
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
+                }
+                return res.status(200).send({ response: resultado });
+            }
+        );
+    });
 });
 
 //ROTA DE PATCH
