@@ -11,20 +11,20 @@ rota.get("/", (req, res, next) => {
     mysql.getConnection((erro, conexao) => {
         //VERIICAR SE TEM ERRO NA CONEXAO 
         if (erro) {
-            return res.status(500).send({ erro: erro })
+            return res.status(500).send({ erro: erro, response: null });
         }
 
         //BUSCAR OS DADOS
         conexao.query(
             "SELECT * FROM produtos;",
-            (erro, resultados, fields) => {
-
+            //CALLBACK
+            (erro, resultado, fields) => {
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
+                }
+                return res.status(200).send({ response: resultado });
             }
         );
-    });
-
-    res.status(200).send({
-        mensagem: "Página GET de  produto."
     });
 });
 
@@ -41,7 +41,7 @@ rota.post("/", (req, res, next) => {
     mysql.getConnection((erro, conexao) => {
         //VERIFICAR SE DEU ERRO NA CONEXÃO 
         if (erro) {
-            return res.status(500).send({ erro: erro })
+            return res.status(500).send({ erro: erro, response: null });
         }
 
         conexao.query(
@@ -59,6 +59,7 @@ rota.post("/", (req, res, next) => {
 
                 return res.status(201).send({
                     mensagem: "Produto inserido com sucesso.",
+                    response: resultado,
                     id_produto: resultado.insertId
                 });
             }

@@ -23,7 +23,8 @@ app.use(body_parser.json());
 
 //INSERIR INFORMAÇÕES DE SEGURANÇA PARA USAR A APLICAÇÃO 
 app.use((req, res, next) => {
-    console.log("FUNÇÃO DE CONFIGURAÇÃO DO SERVER");
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    console.log("FUNÇÃO DE SEGURANÇA DO SERVER");
     //PROPRIEDADE DE ONDE É A ORIGEM - PARA ACEITAR UM SERVIDOR ESPECIFICO "HTTP://SERVERVIDOR.COM.BR"
     res.header("Acces-Control-Allow-Origin", "*");
     //QUAIS AS PROPRIEDADES DE CABEÇALHO SÃO ACEITAS 

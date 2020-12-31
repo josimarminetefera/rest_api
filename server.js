@@ -14,3 +14,4 @@ const servidor = http.createServer(app);
 //ESCUTANDO A PORTA
 servidor.listen(porta);
 console.log("SERVICO INICIADO");
+console.log("----------------------------------");
