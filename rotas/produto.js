@@ -3,6 +3,7 @@ const express = require("express");
 //ABRINDO A ROTA
 const rota = express.Router();
 
+//VOU EXPORTAR SOMENTE O POOL 
 const mysql = require("../mysql").pool;
 
 //ROTA DE GET PARA LISTAR
@@ -22,7 +23,26 @@ rota.get("/", (req, res, next) => {
                 if (erro) {
                     return res.status(500).send({ erro: erro, response: null });
                 }
-                return res.status(200).send({ response: resultado });
+
+                //MONTANDO UMA LISTA DE RESPOSTA PARA MELHORAR VISIBILIDADE DO RETORNO
+                const resposta = {
+                    quantidade: resultado.length,
+                    produtos: resultado.map(i => {
+                        //CADA ITEM DA MINHA LISTA EU VOU ALTERAR O VALOR QUE VOU RETORNAR
+                        return {
+                            id: i.id,
+                            nome: i.nome,
+                            preco: i.preco,
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Retorna todos os produtos.',
+                                url: 'http://localhost:3000/produto/' + i.id
+                            }
+                        }
+                    })
+                }
+
+                return res.status(200).send({ resposta });
             }
         );
     });
@@ -49,7 +69,7 @@ rota.post("/", (req, res, next) => {
             [nome, preco],
             //CALBACK DO query
             (erro, resultado, field) => {
-                //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIVBERAR ESTA CONEXÃO
+                //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIBERAR ESTA CONEXÃO
                 //POIS O POOL DE CONEXÃO TEM UM LIMITE DE CONEXOES ABERTAS
                 conexao.release();
 

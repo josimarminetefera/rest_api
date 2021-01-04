@@ -9,4 +9,5 @@ var pool = mysql.createPool({
     "port": process.env.MYSQL_PORT
 });
 console.log("CONECTANDO BANCO DE DADOS");
+//AQUI SÓ EXPORTOU O POOL
 exports.pool = pool;
