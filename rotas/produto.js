@@ -116,6 +116,24 @@ rota.get("/:id_produto", (req, res, next) => {
                 if (erro) {
                     return res.status(500).send({ erro: erro, response: null });
                 }
+
+                if (resultado.length == 0) {
+                    return res.status(404).send({ mensagem: "Não foi encontrado produto com este id" });
+                }
+
+                const retorno = {
+                    mensagem: "Produto selecionado.",
+                    produto: {
+                        id: resultado.id,
+                        nome: resultado.nome,
+                        preco: resultado.preco,
+                        request: {
+                            tipo: 'GET',
+                            descricao: 'Retorna um produto.',
+                            url: 'http://localhost:3000/produto/' + resultado.id
+                        }
+                    }
+                }
                 return res.status(200).send({
                     mensage: "Lista de produtos",
                     response: resultado
@@ -154,10 +172,21 @@ rota.patch("/", (req, res, next) => {
                     return res.status(500).send({ erro: erro, response: null });
                 }
 
-                return res.status(202).send({
+                const retorno = {
                     mensagem: "Produto alterado com sucesso.",
-                    response: resultado,
-                });
+                    produto: {
+                        id: id,
+                        nome: nome,
+                        preco: preco,
+                        request: {
+                            tipo: 'PATCH',
+                            descricao: 'Atualiza um produto.',
+                            url: 'http://localhost:3000/produto/' + id
+                        }
+                    }
+                }
+
+                return res.status(202).send({ retorno });
             }
         );
     });
