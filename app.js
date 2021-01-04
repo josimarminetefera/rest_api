@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/produto", rota_produtos);
-//app.use("/pedidos", rota_pedidos);
+app.use("/pedidos", rota_pedidos);
 
 //SE NENHUMA DAS ROTAS ACIMA FUNCIONAR AI ELE CAI AQUI NESTES DE ERRO
 //SE ENEHUMA DAS RODAS ACIMA FOR ENCONTRADA ELE COLOCA ESTA TELA AQUI 

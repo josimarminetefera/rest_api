@@ -134,10 +134,7 @@ rota.get("/:id_produto", (req, res, next) => {
                         }
                     }
                 }
-                return res.status(200).send({
-                    mensage: "Lista de produtos",
-                    response: resultado
-                });
+                return res.status(200).send({ retorno });
             }
         );
     });
