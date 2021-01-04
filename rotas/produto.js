@@ -77,11 +77,21 @@ rota.post("/", (req, res, next) => {
                     return res.status(500).send({ erro: erro, response: null });
                 }
 
-                return res.status(201).send({
-                    mensagem: "Produto inserido com sucesso.",
-                    response: resultado,
-                    id_produto: resultado.insertId
-                });
+                const resposta = {
+                    mensagem: "Produto inserido com sucesso",
+                    produto: {
+                        id: resultado.id,
+                        nome: nome,
+                        preco: preco,
+                        request: {
+                            tipo: 'POST',
+                            descricao: 'Insere um Produto.',
+                            url: 'http://localhost:3000/produto/' + resultado.id
+                        }
+                    }
+                }
+
+                return res.status(201).send({ resposta });
             }
         );
     });
