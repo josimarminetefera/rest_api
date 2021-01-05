@@ -1,3 +1,4 @@
+console.log("produtos.js - INICIANDO ROTA DE PRODUTO");
 const express = require("express");
 
 //ABRINDO A ROTA
@@ -8,7 +9,7 @@ const mysql = require("../mysql").pool;
 
 //ROTA DE GET PARA LISTAR
 rota.get("/", (req, res, next) => {
-    console.log("ROTA DE GET PARA LISTAR");
+    console.log("produtos.js - ROTA DE GET PARA LISTAR");
     mysql.getConnection((erro, conexao) => {
         //VERIICAR SE TEM ERRO NA CONEXAO 
         if (erro) {
@@ -50,7 +51,7 @@ rota.get("/", (req, res, next) => {
 
 //ROTA DE POST CADASTRAR
 rota.post("/", (req, res, next) => {
-    console.log("ROTA DE POST CADASTRAR");
+    console.log("produtos.js - ROTA DE POST CADASTRAR");
     const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
@@ -99,7 +100,7 @@ rota.post("/", (req, res, next) => {
 
 //ROTA DE GET PARA VISUALIZAR
 rota.get("/:id_produto", (req, res, next) => {
-    console.log("ROTA DE GET PARA VISUALIZAR");
+    console.log("produtos.js - ROTA DE GET PARA VISUALIZAR");
     const id = req.params.id_produto
     mysql.getConnection((erro, conexao) => {
         //VERIICAR SE TEM ERRO NA CONEXAO 
@@ -142,7 +143,7 @@ rota.get("/:id_produto", (req, res, next) => {
 
 //ROTA DE PATCH PARA ALTERAR PRODUTO
 rota.patch("/", (req, res, next) => {
-    console.log("ROTA DE PATCH ALTERAR PRODUTO");
+    console.log("produtos.js - ROTA DE PATCH ALTERAR PRODUTO");
     //UM OUTRA FORMA DE FAZER SEM VARIAVEL 
     const { nome, preco, id } = req.body
 
@@ -191,7 +192,7 @@ rota.patch("/", (req, res, next) => {
 
 //PARA REMOÇÃO DE DADOS 
 rota.delete("/", (req, res, next) => {
-    console.log("ROTA DE DELETE PARA REMOVER");
+    console.log("produtos.js - ROTA DE DELETE PARA REMOVER");
     const { id } = req.body
 
     mysql.getConnection((erro, conexao) => {

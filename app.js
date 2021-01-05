@@ -1,3 +1,4 @@
+console.log("app.js - INICIANDO APP");
 const express = require("express");
 
 //INSTANCIA DO EXPRESS
@@ -9,7 +10,7 @@ const morgan = require("morgan");
 //ELE DEFINE O CORPO DAS REQUISIÇÕES DE ENTRADA
 const body_parser = require("body-parser")
 
-console.log("CONSTRUINDO ROTAS");
+console.log("app.js - CONSTRUINDO ROTAS");
 const rota_produtos = require("./rotas/produto");
 const rota_pedidos = require("./rotas/pedidos");
 
@@ -24,7 +25,7 @@ app.use(body_parser.json());
 //INSERIR INFORMAÇÕES DE SEGURANÇA PARA USAR A APLICAÇÃO 
 app.use((req, res, next) => {
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    console.log("FUNÇÃO DE SEGURANÇA DO SERVER");
+    console.log("app.js - FUNÇÃO DE SEGURANÇA DO SERVER");
     //PROPRIEDADE DE ONDE É A ORIGEM - PARA ACEITAR UM SERVIDOR ESPECIFICO "HTTP://SERVERVIDOR.COM.BR"
     res.header("Acces-Control-Allow-Origin", "*");
     //QUAIS AS PROPRIEDADES DE CABEÇALHO SÃO ACEITAS 
@@ -44,13 +45,14 @@ app.use((req, res, next) => {
     next();
 });
 
+console.log("app.js - DETALHANDO LINK DA ROTAS");
 app.use("/produto", rota_produtos);
 app.use("/pedidos", rota_pedidos);
 
 //SE NENHUMA DAS ROTAS ACIMA FUNCIONAR AI ELE CAI AQUI NESTES DE ERRO
 //SE ENEHUMA DAS RODAS ACIMA FOR ENCONTRADA ELE COLOCA ESTA TELA AQUI 
 app.use((req, res, next) => {
-    console.log("FUNÇÃO QUANDO A ROTA ESTÁ ERRADA");
+    console.log("app.js - FUNÇÃO QUANDO A ROTA ESTÁ ERRADA");
     const erro = new Error("Link não encontrado")
     erro.status = 404;
     next(erro);
@@ -58,7 +60,7 @@ app.use((req, res, next) => {
 
 //TRATAMENTO QUE VAI RETORNAR QUALQUER ERRO QUE SEMPRE VAI RETORNAR CASO AS ROTAS ACIMA NÃO RETORNE NADA
 app.use((erro, req, res, next) => {
-    console.log("FUNÇÃO PARA RETORNAR O ERRO");
+    console.log("app.js - FUNÇÃO PARA RETORNAR O ERRO");
     res.status(erro.status || 500);
     return res.send({
         erro: {

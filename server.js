@@ -1,4 +1,4 @@
-console.log("INICIANDO SERVICOS");
+console.log("server.js - INICIANDO SERVICOS");
 //CRIAR SERVIÇO HTTP
 const http = require("http");
 
@@ -13,5 +13,5 @@ const servidor = http.createServer(app);
 
 //ESCUTANDO A PORTA
 servidor.listen(porta);
-console.log("SERVICO INICIADO");
+console.log("server.js - SERVICO INICIADO");
 console.log("----------------------------------");

@@ -1,3 +1,4 @@
+console.log("pedidos.js - INICIANDO ROTA DE PEDIDOS");
 const express = require("express");
 
 //ABRINDO A ROTA
@@ -8,7 +9,7 @@ const mysql = require("../mysql").pool;
 
 //INSERIR UM PEDIDO
 rota.post("/", (req, res, next) => {
-    console.log("ROTA DE POST PARA INSERIR PRODUTO");
+    console.log("pedidos.js - ROTA DE POST PARA INSERIR PRODUTO");
     const { id_produto, quantidade } = req.body;
 
     mysql.getConnection((erro, conexao) => {
