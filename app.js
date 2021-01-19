@@ -42,6 +42,7 @@ app.use((req, res, next) => {
     }
 
     //PULAR PARA A PROXIMA FUNÇÃO 
+    console.log("app.js - FIM FUNÇÃO DE SEGURANÇA DO SERVER");
     next();
 });
 

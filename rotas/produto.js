@@ -49,7 +49,7 @@ rota.get("/", (req, res, next) => {
     });
 });
 
-//ROTA DE POST CADASTRAR
+//ROTA DE POST PARA CADASTRAR
 rota.post("/", (req, res, next) => {
     console.log("produtos.js - ROTA DE POST CADASTRAR");
     const produto = {

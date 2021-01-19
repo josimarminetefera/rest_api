@@ -1,3 +1,4 @@
+//para iniciar o projeto npm start
 console.log("server.js - INICIANDO SERVICOS");
 //CRIAR SERVIÇO HTTP
 const http = require("http");
