@@ -7,6 +7,60 @@ const rota = express.Router();
 //VOU EXPORTAR SOMENTE O POOL 
 const mysql = require("../mysql").pool;
 
+//rota get para listar pedidos
+rota.get("/", (req, res, next) => {
+    console.log("pedidos.js - ROTA DE GET PARA LISTAR");
+    mysql.getConnection((erro, conexao) => {
+
+        if (erro) {
+            return res.status(500).send({ erro: erro, response: null });
+        }
+
+        //buscar os dados 
+        conexao.query(
+            `
+                SELECT 
+                    pedidos.id as id_pedido,
+                    pedidos.quantidade,
+                    produtos.id as id_produto,
+                    produtos.nome,
+                    produtos.preco
+                FROM pedidos
+                INNER JOIN produtos on produtos.id = pedidos.id_produto;
+            `,
+            //callback
+            (erro, resultado, fields) => {
+
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
+                }
+                console.log(resultado);
+                const resposta = {
+                    quantidade: resultado.length,
+                    pedido: resultado.map(i => {
+                        return {
+                            id: i.id_pedido,
+                            quantidade: i.quantidade,
+                            produto: {
+                                id: i.id_produto,
+                                nome: i.nome,
+                                preco: i.preco,
+                            },
+                            request: {
+                                tipo: 'GET',
+                                descricao: 'Pegar detalhes de um pedido.',
+                                url: 'http://localhost:3000/pedido/' + i.id
+                            }
+                        }
+                    }),
+                }
+
+                return res.status(200).send({ resposta });
+            }
+        );
+    });
+});
+
 //INSERIR UM PEDIDO
 rota.post("/", (req, res, next) => {
     console.log("pedidos.js - ROTA DE POST PARA INSERIR PRODUTO");
@@ -48,8 +102,10 @@ rota.post("/", (req, res, next) => {
 
                             const resposta = {
                                 mensagem: "Pedido inserido com sucesso",
-                                produto: {
+                                pedido: {
                                     id: resultado.id,
+                                    id_produto: id_produto,
+                                    quantidade: quantidade,
                                     request: {
                                         tipo: 'POST',
                                         descricao: 'Insere um pedido.',
