@@ -17,6 +17,9 @@ const rota_pedidos = require("./rotas/pedidos");
 //PARA MONITORAR TODA EXECUÇÃO E REQUIZIÇÃO E DAR UM LOG
 app.use(morgan("dev"));
 
+//diretorio de uploads está aberto publicamente 
+app.use("/uploads", express.static("uploads"));
+
 //FALANDO QUE A ENTRADA DE DADOS VAI ACEITAR APENAS DADOS SIMPLES
 app.use(body_parser.urlencoded({ extended: false }));
 //ACEITA APENAS FORMATO JSON DE ENTRADA NO BODY

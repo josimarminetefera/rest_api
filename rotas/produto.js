@@ -7,6 +7,44 @@ const rota = express.Router();
 //VOU EXPORTAR SOMENTE O POOL 
 const mysql = require("../mysql").pool;
 
+//biblioteca para trabalhar com arquivos no json
+const multer = require("multer");
+
+//dar dados a o arquivo antes de gravar ele no banco de dados
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        //callback(erro,diretório para salvar o arquivo)
+        callback(null, "./uploads/");
+    },
+    filename: function (req, file, callback) {
+        //gerar o nome do arquivo com diferencial antes
+        //callback(null, new Date().toISOString() + file.originalname);
+        let data = new Date().toISOString().replace(/:/g, '-') + '-';
+        callback(null, data + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, callback) => {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+        //true quer dizer que voce quer que passe
+        callback(null, true);
+    } else {
+        //false quer dizer que voce quer que não passe
+        callback(null, false);
+    }
+}
+
+//indicando a pasta que todos uploads vão para esta pasta uplods
+const upload = multer({
+    storage: storage,
+    //regra de tamanho maximo de arquivo
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+    //dest: "uploads/", deixa de receber esta propriedade pois vai receber o storage
+});
+
 //ROTA DE GET PARA LISTAR
 rota.get("/", (req, res, next) => {
     console.log("produtos.js - ROTA DE GET PARA LISTAR");
@@ -34,6 +72,7 @@ rota.get("/", (req, res, next) => {
                             id: i.id,
                             nome: i.nome,
                             preco: i.preco,
+                            imagem_produto: i.imagem_produto,
                             request: {
                                 tipo: 'GET',
                                 descricao: 'Retorna todos os produtos.',
@@ -50,8 +89,13 @@ rota.get("/", (req, res, next) => {
 });
 
 //ROTA DE POST PARA CADASTRAR
-rota.post("/", (req, res, next) => {
+//nesta rota podem ser passados vários renders ou metodos por exemplo upload.single('produto_imagem')
+rota.post("/", upload.single('produto_imagem'), (req, res, next) => {
     console.log("produtos.js - ROTA DE POST CADASTRAR");
+
+    //propriedade que o proprio multer tras
+    console.log(req.file);
+
     const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
@@ -66,8 +110,12 @@ rota.post("/", (req, res, next) => {
         }
 
         conexao.query(
-            "INSERT INTO produtos (nome, preco) VALUES (?,?)",
-            [nome, preco],
+            "INSERT INTO produtos (nome, preco, imagem_produto) VALUES (?,?,?)",
+            [
+                nome, 
+                preco,
+                req.file.path
+            ],
             //CALBACK DO query
             (erro, resultado, field) => {
                 //QUANDO ENTRAR NOCALBACK JA FEZ O QUE TINHA QUE FAZER ACIMA AI TEM QUE LIBERAR ESTA CONEXÃO
@@ -84,6 +132,7 @@ rota.post("/", (req, res, next) => {
                         id: resultado.id,
                         nome: nome,
                         preco: preco,
+                        imagem_produto: req.file.path,
                         request: {
                             tipo: 'POST',
                             descricao: 'Insere um Produto.',
