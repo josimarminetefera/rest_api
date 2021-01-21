@@ -11,6 +11,7 @@ const morgan = require("morgan");
 const body_parser = require("body-parser")
 
 console.log("app.js - CONSTRUINDO ROTAS");
+const rota_usuario = require("./rotas/usuario");
 const rota_produtos = require("./rotas/produto");
 const rota_pedidos = require("./rotas/pedidos");
 
@@ -50,6 +51,7 @@ app.use((req, res, next) => {
 });
 
 console.log("app.js - DETALHANDO LINK DA ROTAS");
+app.use("/usuario", rota_usuario);
 app.use("/produto", rota_produtos);
 app.use("/pedidos", rota_pedidos);
 
