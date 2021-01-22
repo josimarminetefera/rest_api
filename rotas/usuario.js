@@ -65,4 +65,46 @@ rota.post("/cadastrar", (req, res, next) => {
     });
 });
 
+rota.post("/login", (req, res, next) => {
+    mysql.getConnection((erro, conexao) => {
+        //VERIFICAR SE DEU ERRO NA CONEXÃO 
+        if (erro) {
+            return res.status(500).send({ erro: erro, response: null });
+        }
+        conexao.query(
+            `SELECT * FROM usuario where email = ?`,
+            [req.body.email],
+            (erro, resultado, filds) => {
+                conexao.release();
+
+                if (erro) {
+                    return res.status(500).send({ erro: erro, response: null });
+                }
+
+                if (resultado.length < 1) {
+                    return res.status(401).send({ mensagem: "02: Falha na autenticação." });
+                }
+
+                bcrypt.compare(
+                    req.body.senha,
+                    resultado[0].senha,
+                    (erro, resultado) => {
+                        if (erro) {
+                            return res.status(401).send({ mensagem: "01: Falha na autenticação." });
+                        }
+
+                        if (resultado) {
+                            //tudo certo
+                            return res.status(200).send({ mensagem: 'Autenticado com sucesso' });
+                        }
+
+                        //usuário ou senha incorreto
+                        return res.status(401).send({ mensagem: "Usuário ou senha incorretos." });
+                    }
+                );
+            }
+        );
+    });
+});
+
 module.exports = rota;
