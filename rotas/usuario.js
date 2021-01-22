@@ -10,6 +10,9 @@ const mysql = require("../mysql").pool;
 //biblioteca de criptografar a senha
 const bcrypt = require("bcrypt");
 
+//gerar e monitorar token
+const jsonwebtoken = require("jsonwebtoken");
+
 rota.post("/cadastrar", (req, res, next) => {
     console.log("usuario.js - INICIANDO FUNÇÃO cadastrar");
     mysql.getConnection((erro, conexao) => {
@@ -88,14 +91,28 @@ rota.post("/login", (req, res, next) => {
                 bcrypt.compare(
                     req.body.senha,
                     resultado[0].senha,
-                    (erro, resultado) => {
+                    (erro, resultado_bcrypt) => {
                         if (erro) {
                             return res.status(401).send({ mensagem: "01: Falha na autenticação." });
                         }
 
-                        if (resultado) {
+                        if (resultado_bcrypt) {
                             //tudo certo
-                            return res.status(200).send({ mensagem: 'Autenticado com sucesso' });
+                            let token = jsonwebtoken.sign(
+                                {
+                                    id: resultado[0].id,
+                                    email: resultado[0].email
+                                },
+                                process.env.JWT_TOKEN_KEY,
+                                {
+                                    expiresIn: "1h"
+                                }
+                            );
+
+                            return res.status(200).send({
+                                mensagem: 'Autenticado com sucesso',
+                                token: token
+                            });
                         }
 
                         //usuário ou senha incorreto
