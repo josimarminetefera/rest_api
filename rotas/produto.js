@@ -4,9 +4,6 @@ const express = require("express");
 //ABRINDO A ROTA
 const rota = express.Router();
 
-//VOU EXPORTAR SOMENTE O POOL 
-const mysql = require("../mysql").pool;
-
 //biblioteca para trabalhar com arquivos no json
 const multer = require("multer");
 
