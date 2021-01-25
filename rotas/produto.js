@@ -94,7 +94,8 @@ rota.get("/", (req, res, next) => {
 //ROTA DE POST PARA CADASTRAR
 //nesta rota podem ser passados vários renders ou metodos por exemplo upload.single('produto_imagem')
 //antes de (req, res, next)  voce pode colocar vários metodos para a rota executar antes.
-rota.post("/", login_middleware, upload.single('produto_imagem'), (req, res, next) => {
+//login_middleware está depois de pegar o arquivo pois envio dos dados está como form_data
+rota.post("/", upload.single('produto_imagem'), login_middleware, (req, res, next) => {
     console.log("produtos.js - ROTA DE POST CADASTRAR");
 
     //propriedade que o proprio multer tras

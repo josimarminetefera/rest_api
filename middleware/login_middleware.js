@@ -7,8 +7,11 @@ module.exports = (req, res, next) => {
     try {
         console.log(">>>>-------------------------->");
         console.log("login_middleware.js - AUTENTICANDO A ROTA");
+        //por padrão o certo é pegar do header
+        const token = req.headers.authorization.split(" ")[1];
+        console.log(token);
         //verifica se o token está certo passando a chave para decodificar
-        const decode = jsonwebtoken.verify(req.body.token, process.env.JWT_TOKEN_KEY)
+        const decode = jsonwebtoken.verify(token, process.env.JWT_TOKEN_KEY)
         //json já com id do usuário é email
         req.usuario = decode;
         //pode seguir para o próximo método
