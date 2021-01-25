@@ -95,8 +95,9 @@ rota.get("/", (req, res, next) => {
 //nesta rota podem ser passados vários renders ou metodos por exemplo upload.single('produto_imagem')
 //antes de (req, res, next)  voce pode colocar vários metodos para a rota executar antes.
 //login_middleware está depois de pegar o arquivo pois envio dos dados está como form_data
-rota.post("/", upload.single('produto_imagem'), login_middleware, (req, res, next) => {
+rota.post("/", login_middleware.obrigatorio, upload.single('produto_imagem'), (req, res, next) => {
     console.log("produtos.js - ROTA DE POST CADASTRAR");
+    console.log(req.usuario);
 
     //propriedade que o proprio multer tras
     console.log(req.file);
@@ -117,7 +118,7 @@ rota.post("/", upload.single('produto_imagem'), login_middleware, (req, res, nex
         conexao.query(
             "INSERT INTO produtos (nome, preco, imagem_produto) VALUES (?,?,?)",
             [
-                nome, 
+                nome,
                 preco,
                 req.file.path
             ],
@@ -196,7 +197,7 @@ rota.get("/:id_produto", (req, res, next) => {
 });
 
 //ROTA DE PATCH PARA ALTERAR PRODUTO
-rota.patch("/", (req, res, next) => {
+rota.patch("/", login_middleware.obrigatorio, (req, res, next) => {
     console.log("produtos.js - ROTA DE PATCH ALTERAR PRODUTO");
     //UM OUTRA FORMA DE FAZER SEM VARIAVEL 
     const { nome, preco, id } = req.body
@@ -245,7 +246,7 @@ rota.patch("/", (req, res, next) => {
 });
 
 //PARA REMOÇÃO DE DADOS 
-rota.delete("/", (req, res, next) => {
+rota.delete("/", login_middleware.obrigatorio, (req, res, next) => {
     console.log("produtos.js - ROTA DE DELETE PARA REMOVER");
     const { id } = req.body
 
