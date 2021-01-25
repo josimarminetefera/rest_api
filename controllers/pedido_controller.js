@@ -1,11 +1,11 @@
-console.log("pedidos_controller.js - INICIANDO CONTROLLER DE PEDIDOS");
+console.log("pedido_controller.js - INICIANDO CONTROLLER DE PEDIDO");
 const express = require("express");
 
 //VOU EXPORTAR SOMENTE O POOL 
 const mysql = require("../mysql").pool;
 
 exports.listar = (req, res, next) => {
-    console.log("pedidos_controller.js - listar");
+    console.log("pedido_controller.js - listar");
     mysql.getConnection((erro, conexao) => {
 
         if (erro) {
@@ -16,13 +16,13 @@ exports.listar = (req, res, next) => {
         conexao.query(
             `
                 SELECT 
-                    pedidos.id as id_pedido,
-                    pedidos.quantidade,
-                    produtos.id as id_produto,
-                    produtos.nome,
-                    produtos.preco
-                FROM pedidos
-                INNER JOIN produtos on produtos.id = pedidos.id_produto;
+                    pedido.id as id_pedido,
+                    pedido.quantidade,
+                    produto.id as id_produto,
+                    produto.nome,
+                    produto.preco
+                FROM pedido
+                INNER JOIN produto on produto.id = pedido.id_produto;
             `,
             //callback
             (erro, resultado, fields) => {
@@ -58,7 +58,7 @@ exports.listar = (req, res, next) => {
 };
 
 exports.cadastrar = (req, res, next) => {
-    console.log("pedidos_controller.js - cadastrar");
+    console.log("pedido_controller.js - cadastrar");
     const { id_produto, quantidade } = req.body;
 
     mysql.getConnection((erro, conexao) => {
@@ -66,7 +66,7 @@ exports.cadastrar = (req, res, next) => {
             return res.status(500).send({ erro: erro, response: null });
         }
         conexao.query(
-            "SELECT * FROM produtos WHERE id = ?",
+            "SELECT * FROM produto WHERE id = ?",
             [id_produto],
             (erro, resultado, field) => {
                 if (erro) {
@@ -83,7 +83,7 @@ exports.cadastrar = (req, res, next) => {
                     }
 
                     conexao.query(
-                        "INSERT INTO pedidos (id_produto, quantidade) VALUES (?,?)",
+                        "INSERT INTO pedido (id_produto, quantidade) VALUES (?,?)",
                         [id_produto, quantidade],
                         //CALBACK DO query
                         (erro, resultado, field) => {

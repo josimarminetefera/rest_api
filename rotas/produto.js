@@ -1,4 +1,4 @@
-console.log("produtos.js - INICIANDO ROTA DE PRODUTO");
+console.log("produto.js - INICIANDO ROTA DE PRODUTO");
 const express = require("express");
 
 //ABRINDO A ROTA

@@ -12,8 +12,8 @@ const body_parser = require("body-parser")
 
 console.log("app.js - CONSTRUINDO ROTAS");
 const rota_usuario = require("./rotas/usuario");
-const rota_produtos = require("./rotas/produto");
-const rota_pedidos = require("./rotas/pedidos");
+const rota_produto = require("./rotas/produto");
+const rota_pedido = require("./rotas/pedido");
 
 //PARA MONITORAR TODA EXECUÇÃO E REQUIZIÇÃO E DAR UM LOG
 app.use(morgan("dev"));
@@ -52,8 +52,8 @@ app.use((req, res, next) => {
 
 console.log("app.js - DETALHANDO LINK DA ROTAS");
 app.use("/usuario", rota_usuario);
-app.use("/produto", rota_produtos);
-app.use("/pedidos", rota_pedidos);
+app.use("/produto", rota_produto);
+app.use("/pedido", rota_pedido);
 
 //SE NENHUMA DAS ROTAS ACIMA FUNCIONAR AI ELE CAI AQUI NESTES DE ERRO
 //SE ENEHUMA DAS RODAS ACIMA FOR ENCONTRADA ELE COLOCA ESTA TELA AQUI 

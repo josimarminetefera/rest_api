@@ -5,7 +5,7 @@ const jsonwebtoken = require("jsonwebtoken");
 //metodo para verificar antes de entrar na rota se o usuário está logado
 exports.obrigatorio = (req, res, next) => {
     try {
-        console.log(">>>>-------------------------->");
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         console.log("login_middleware.js - AUTENTICANDO A ROTA");
         //por padrão o certo é pegar do header
         const token = req.headers.authorization.split(" ")[1];
@@ -23,7 +23,8 @@ exports.obrigatorio = (req, res, next) => {
 
 exports.opcional = (req, res, next) => {
     try {
-        console.log(">>>>-------------------------->");
+        console.log("");
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         console.log("login_middleware.js - AUTENTICANDO A ROTA");
         //por padrão o certo é pegar do header
         const token = req.headers.authorization.split(" ")[1];

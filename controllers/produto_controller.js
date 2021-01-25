@@ -15,7 +15,7 @@ exports.listar = (req, res, next) => {
 
         //BUSCAR OS DADOS
         conexao.query(
-            "SELECT * FROM produtos;",
+            "SELECT * FROM produto;",
             //CALLBACK
             (erro, resultado, fields) => {
                 if (erro) {
@@ -25,7 +25,7 @@ exports.listar = (req, res, next) => {
                 //MONTANDO UMA LISTA DE RESPOSTA PARA MELHORAR VISIBILIDADE DO RETORNO
                 const resposta = {
                     quantidade: resultado.length,
-                    produtos: resultado.map(i => {
+                    produto: resultado.map(i => {
                         //CADA ITEM DA MINHA LISTA EU VOU ALTERAR O VALOR QUE VOU RETORNAR
                         return {
                             id: i.id,
@@ -34,7 +34,7 @@ exports.listar = (req, res, next) => {
                             imagem_produto: i.imagem_produto,
                             request: {
                                 tipo: 'GET',
-                                descricao: 'Retorna todos os produtos.',
+                                descricao: 'Retorna todos os produto.',
                                 url: 'http://localhost:3000/produto/' + i.id
                             }
                         }
@@ -68,7 +68,7 @@ exports.cadastrar = (req, res, next) => {
         }
 
         conexao.query(
-            "INSERT INTO produtos (nome, preco, imagem_produto) VALUES (?,?,?)",
+            "INSERT INTO produto (nome, preco, imagem_produto) VALUES (?,?,?)",
             [
                 nome,
                 preco,
@@ -118,7 +118,7 @@ exports.alterar = (req, res, next) => {
 
         conexao.query(
             `
-                UPDATE produtos
+                UPDATE produto
                     SET nome = ?, preco = ?
                 WHERE id = ?;
             `,
@@ -164,7 +164,7 @@ exports.visualizar = (req, res, next) => {
 
         //BUSCAR OS DADOS
         conexao.query(
-            "SELECT * FROM produtos WHERE id = ?;",
+            "SELECT * FROM produto WHERE id = ?;",
             [id],
             //CALLBACK
             (erro, resultado, fields) => {
@@ -207,7 +207,7 @@ exports.remover = (req, res, next) => {
 
         conexao.query(
             `
-                DELETE FROM produtos WHERE id = ?;
+                DELETE FROM produto WHERE id = ?;
             `,
             [id],
             //CALBACK DO query
